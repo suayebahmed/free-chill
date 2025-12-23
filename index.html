@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free & Chill | The Ultimate Directory</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Orbitron (Tech headers) and Inter (Body) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tech: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            black: '#0a0a0f',
+                            dark: '#13131f',
+                            gray: '#1f1f2e',
+                            primary: '#00f2ff', // Cyan
+                            secondary: '#bc13fe', // Purple
+                            accent: '#2ecc71', // Green
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            /* Light mode track */
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+            /* Dark mode track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            /* Light mode thumb */
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #1f1f2e;
+            /* Dark mode thumb */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2ff;
+        }
+
+        /* Techy Grid Background */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+
+        .dark .bg-grid {
+            background-image: linear-gradient(to right, rgba(30, 30, 40, 0.5) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(30, 30, 40, 0.5) 1px, transparent 1px);
+        }
+
+        /* Card Hover Glow */
+        .tech-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+            border-color: #00f2ff;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .tech-card:hover::before {
+            left: 100%;
+        }
+
+        /* Neon Text Utilities */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        .text-glow-purple {
+            text-shadow: 0 0 10px rgba(188, 19, 254, 0.5);
+        }
+
+        /* Active Tab Styling */
+        .tab-btn.active {
+            background-color: rgba(0, 242, 255, 0.1);
+            color: #00f2ff;
+            border-color: #00f2ff;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+        }
+
+        /* Input Focus */
+        .search-input:focus {
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+        }
+
+        /* Moving Background Squares */
+        .bg-squares {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            /* Behind content but in front of grid */
+            pointer-events: none;
+        }
+
+        .square {
+            position: absolute;
+            background: rgba(0, 242, 255, 0.03);
+            border: 1px solid rgba(0, 242, 255, 0.1);
+            backdrop-filter: blur(1px);
+            animation: moveSquare 20s linear infinite;
+        }
+
+        .dark .square {
+            background: rgba(0, 242, 255, 0.03);
+            border: 1px solid rgba(0, 242, 255, 0.1);
+        }
+
+        /* Light mode square adjustments if needed, keeping subtle */
+        html:not(.dark) .square {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .square:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            left: 10%;
+            top: -100px;
+            animation-duration: 15s;
+        }
+
+        .square:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            left: 30%;
+            top: -150px;
+            animation-duration: 25s;
+            animation-delay: 2s;
+        }
+
+        .square:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            left: 60%;
+            top: -80px;
+            animation-duration: 18s;
+            animation-delay: 5s;
+        }
+
+        .square:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            left: 80%;
+            top: -120px;
+            animation-duration: 22s;
+            animation-delay: 1s;
+        }
+
+        .square:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            left: 50%;
+            top: -60px;
+            animation-duration: 12s;
+            animation-delay: 8s;
+        }
+
+        @keyframes moveSquare {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(120vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gray-50 dark:bg-cyber-black text-gray-900 dark:text-gray-300 font-sans min-h-screen relative selection:bg-cyber-primary selection:text-cyber-black transition-colors duration-300">
+
+    <!-- Warning Banner -->
+    <div class="bg-yellow-500 text-black text-center py-2 px-4 font-bold text-sm relative z-50 shadow-md">
+        <i class="fas fa-triangle-exclamation mr-2"></i>
+        Please use VPN or Ad Blocker while using these sites.
+    </div>
+
+    <!-- Background Grid Effect -->
+    <div class="fixed inset-0 bg-grid pointer-events-none z-0"></div>
+
+    <!-- Moving Background Squares -->
+    <div class="bg-squares">
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+        <div class="square"></div>
+    </div>
+
+    <div class="relative z-10 container mx-auto px-4 py-8 max-w-6xl pb-32">
+
+        <!-- Header -->
+        <header class="text-center mb-12 animate-float relative">
+            <button id="themeToggle"
+                class="absolute right-0 top-0 p-2 px-4 rounded-full bg-white dark:bg-cyber-dark border border-gray-200 dark:border-cyber-gray text-gray-600 dark:text-cyber-primary hover:shadow-lg transition-all flex items-center gap-2">
+                <i class="fas fa-moon dark:hidden"></i>
+                <i class="fas fa-sun hidden dark:inline"></i>
+                <span id="themeLabel" class="text-sm font-bold font-tech">Light Mode</span>
+            </button>
+            <h1 class="text-5xl md:text-7xl font-tech font-black text-gray-900 dark:text-white tracking-tighter mb-2">
+                FREE <span class="text-cyber-primary text-glow">&</span> CHILL
+            </h1>
+            <p class="text-cyber-primary uppercase tracking-[0.3em] text-sm font-bold">The Digital Directory</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="flex justify-center mb-10">
+            <div class="relative w-full max-w-md group">
+                <i
+                    class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-cyber-secondary transition-colors"></i>
+                <input type="text" id="searchInput"
+                    class="search-input w-full bg-white dark:bg-cyber-dark border border-gray-200 dark:border-cyber-gray text-gray-900 dark:text-white py-3 pl-12 pr-4 rounded-lg focus:outline-none focus:border-cyber-secondary transition-all placeholder-gray-400 dark:placeholder-gray-600 shadow-sm dark:shadow-none"
+                    placeholder="Search for streams, books, or sports...">
+            </div>
+        </div>
+
+        <!-- Navigation / Categories -->
+        <nav class="flex flex-wrap justify-center gap-3 mb-12" id="categoryNav">
+            <!-- Buttons injected by JS -->
+        </nav>
+
+        <!-- Dynamic Grid Content -->
+        <main id="contentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards injected by JS -->
+        </main>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="emptyState" class="hidden text-center py-20">
+            <i class="fas fa-robot text-6xl text-cyber-gray mb-4"></i>
+            <h3 class="text-xl font-tech text-gray-400">No signals found</h3>
+            <p class="text-gray-600">Try adjusting your search criteria.</p>
+        </div>
+
+        <!-- Footer -->
+        <footer
+            class="fixed bottom-0 left-0 w-full z-50 bg-white/90 dark:bg-cyber-black/95 backdrop-blur-md border-t border-gray-200 dark:border-cyber-gray py-6 text-center text-gray-500 text-sm shadow-[0_-5px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-5px_20px_rgba(0,0,0,0.5)] transition-colors">
+            <p>&copy; 2026 Free & Chill. All rights reserved.</p>
+            <div class="mt-2 flex justify-center gap-4 text-lg">
+                <a href="#" class="hover:text-cyber-primary transition-colors"><i class="fab fa-discord"></i></a>
+                <a href="#" class="hover:text-cyber-primary transition-colors"><i class="fab fa-github"></i></a>
+                <a href="#" class="hover:text-cyber-primary transition-colors"><i class="fab fa-telegram"></i></a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Source
+        const links = [
+            // Movies / TV
+            { id: 1, title: "DoraWatch.net", category: "movies", desc: "Latest blockbusters in 4K resolution.", icon: "fa-film", url: "https://dorawatch.net/home" },
+            { id: 2, title: "wmovies.one", category: "movies", desc: "Classic cinema and indie favorites.", icon: "fa-ticket", url: "https://wmovies.one/home" },
+            { id: 3, title: "HydraHD.ru", category: "movies", desc: "Binge-watch trending TV shows.", icon: "fa-tv", url: "https://hydrahd.ru" },
+            { id: 4, title: "Cineby.gd", category: "movies", desc: "", icon: "fa-film", url: "https://cineby.gd" },
+            { id: 5, title: "Cinema.BZ", category: "movies", desc: "", icon: "fa-film", url: "https://cinema.bz" },
+            { id: 6, title: "tmovie.tv", category: "movies", desc: "", icon: "fa-film", url: "https://tmovie.tv" },
+            { id: 7, title: "goojara.to", category: "movies", desc: "", icon: "fa-film", url: "https://goojara.to" },
+            { id: 8, title: "veloratv.ru", category: "movies", desc: "", icon: "fa-film", url: "https://veloratv.ru" },
+            { id: 9, title: "mapple.mov", category: "movies", desc: "", icon: "fa-film", url: "https://mapple.mov" },
+            { id: 10, title: "PopCornmovies.org", category: "movies", desc: "", icon: "fa-film", url: "https://popcornmovies.org" },
+            { id: 11, title: "gomovies.gg", category: "movies", desc: "", icon: "fa-film", url: "https://gomovies.gg" },
+            { id: 12, title: "onionplay.mx", category: "movies", desc: "", icon: "fa-film", url: "https://onionplay.mx" },
+            { id: 13, title: "lookmovie2.to", category: "movies", desc: "", icon: "fa-film", url: "https://lookmovie2.to" },
+            { id: 14, title: "pressplay.top", category: "movies", desc: "", icon: "fa-film", url: "https://pressplay.top" },
+            { id: 15, title: "moviesjoytv.to", category: "movies", desc: "", icon: "fa-film", url: "https://moviesjoytv.to" },
+            { id: 16, title: "fmovies.co", category: "movies", desc: "", icon: "fa-film", url: "https://fmovies.co" },
+            { id: 17, title: "soap2dayhdz.com", category: "movies", desc: "", icon: "fa-film", url: "https://soap2dayhdz.com" },
+            { id: 18, title: "projectfreetv.sx", category: "movies", desc: "", icon: "fa-film", url: "https://projectfreetv.sx" },
+            { id: 19, title: "sflix.ps", category: "movies", desc: "", icon: "fa-film", url: "https://sflix.ps" },
+            { id: 20, title: "theflixertv.to", category: "movies", desc: "", icon: "fa-film", url: "https://theflixertv.to" },
+            { id: 21, title: "myflixerz.to", category: "movies", desc: "", icon: "fa-film", url: "https://myflixerz.to" },
+            { id: 22, title: "hdtoday.tv", category: "movies", desc: "", icon: "fa-film", url: "https://hdtoday.tv" },
+            { id: 23, title: "flixhq.to", category: "movies", desc: "", icon: "fa-film", url: "https://flixhq.to" },
+            { id: 24, title: "hurawatch.cc", category: "movies", desc: "", icon: "fa-film", url: "https://hurawatch.cc" },
+            { id: 25, title: "broflix.si", category: "movies", desc: "", icon: "fa-film", url: "https://broflix.si" },
+            { id: 26, title: "ridomovies.tv", category: "movies", desc: "", icon: "fa-film", url: "https://ridomovies.tv" },
+            { id: 27, title: "123moviesfree.net", category: "movies", desc: "", icon: "fa-film", url: "https://123moviesfree.net" },
+            { id: 28, title: "hdtoday.cc", category: "movies", desc: "", icon: "fa-film", url: "https://hdtoday.cc" },
+            { id: 29, title: "vidplay.org", category: "movies", desc: "", icon: "fa-film", url: "https://vidplay.org" },
+            { id: 30, title: "putlocker.pe", category: "movies", desc: "", icon: "fa-film", url: "https://putlocker.pe" },
+            { id: 31, title: "yesmovies.ag", category: "movies", desc: "", icon: "fa-film", url: "https://yesmovies.ag" },
+            { id: 32, title: "watchseries.pe", category: "movies", desc: "", icon: "fa-film", url: "https://watchseries.pe" },
+            { id: 33, title: "primewire.mov", category: "movies", desc: "", icon: "fa-film", url: "https://primewire.mov" },
+            { id: 34, title: "watch32.sx", category: "movies", desc: "", icon: "fa-film", url: "https://watch32.sx" },
+
+            // Anime
+            { id: 35, title: "anime.nexus", category: "anime", desc: "", icon: "fa-ghost", url: "https://anime.nexus" },
+            { id: 36, title: "hianime.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://hianime.to" },
+            { id: 37, title: "9animetv.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://9animetv.to" },
+            { id: 38, title: "miruro.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://miruro.to" },
+            { id: 39, title: "anitaku.io", category: "anime", desc: "", icon: "fa-ghost", url: "https://anitaku.io" },
+            { id: 40, title: "animekai.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://animekai.to" },
+            { id: 41, title: "gogoanime.org.vc", category: "anime", desc: "", icon: "fa-ghost", url: "https://gogoanime.org.vc" },
+            { id: 42, title: "animetsu.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://animetsu.to" },
+            { id: 43, title: "kickassanime.mx", category: "anime", desc: "", icon: "fa-ghost", url: "https://kickassanime.mx" },
+            { id: 44, title: "aniwatchtv.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://aniwatchtv.to" },
+            { id: 45, title: "animegg.org", category: "anime", desc: "", icon: "fa-ghost", url: "https://animegg.org" },
+            { id: 46, title: "animestream.net", category: "anime", desc: "", icon: "fa-ghost", url: "https://animestream.net" },
+            { id: 47, title: "kissanime.com.ru", category: "anime", desc: "", icon: "fa-ghost", url: "https://kissanime.com.ru" },
+            { id: 48, title: "allmanga.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://allmanga.to" },
+            { id: 49, title: "aniworld.to", category: "anime", desc: "", icon: "fa-ghost", url: "https://aniworld.to" },
+            { id: 50, title: "wcostream.tv", category: "anime", desc: "", icon: "fa-ghost", url: "https://wcostream.tv" },
+            { id: 51, title: "nyaa.land", category: "anime", desc: "", icon: "fa-ghost", url: "https://nyaa.land" },
+            { id: 52, title: "123animes.ru", category: "anime", desc: "", icon: "fa-ghost", url: "https://123animes.ru" },
+        ];
+
+        const additionalLinks = [
+            // Manga
+            { id: 53, title: "mangapark.io", category: "manga", desc: "", icon: "fa-book", url: "https://mangapark.io" },
+            { id: 54, title: "mangafire.to", category: "manga", desc: "", icon: "fa-book", url: "https://mangafire.to" },
+            { id: 55, title: "mangahaven.net", category: "manga", desc: "", icon: "fa-book", url: "https://mangahaven.net" },
+            { id: 56, title: "batotoo.com", category: "manga", desc: "", icon: "fa-book", url: "https://batotoo.com" },
+            { id: 57, title: "mangadex.org", category: "manga", desc: "", icon: "fa-book", url: "https://mangadex.org" },
+            { id: 58, title: "allmanga.to", category: "manga", desc: "", icon: "fa-book", url: "https://allmanga.to" },
+            { id: 59, title: "mangago.me", category: "manga", desc: "", icon: "fa-book", url: "https://mangago.me" },
+            { id: 60, title: "weebcentral.com", category: "manga", desc: "", icon: "fa-book", url: "https://weebcentral.com" },
+            { id: 61, title: "battwo.com", category: "manga", desc: "", icon: "fa-book", url: "https://battwo.com" },
+            { id: 62, title: "kagane.org", category: "manga", desc: "", icon: "fa-book", url: "https://kagane.org" },
+
+            // Live Sports
+            { id: 63, title: "livetv.sx", category: "sports", desc: "", icon: "fa-trophy", url: "https://livetv.sx" },
+            { id: 64, title: "totalsportek.at", category: "sports", desc: "", icon: "fa-trophy", url: "https://totalsportek.at" },
+            { id: 65, title: "sportsurge.net", category: "sports", desc: "", icon: "fa-trophy", url: "https://sportsurge.net" },
+            { id: 66, title: "streamed.su", category: "sports", desc: "", icon: "fa-trophy", url: "https://streamed.su" },
+            { id: 67, title: "tv.tflix.app", category: "sports", desc: "", icon: "fa-trophy", url: "https://tv.tflix.app" },
+            { id: 68, title: "streameast.ga", category: "sports", desc: "", icon: "fa-trophy", url: "https://streameast.ga" },
+            { id: 69, title: "rbtv77.gold", category: "sports", desc: "", icon: "fa-trophy", url: "https://rbtv77.gold" },
+            { id: 70, title: "methstreams.dad", category: "sports", desc: "", icon: "fa-trophy", url: "https://methstreams.dad" },
+            { id: 71, title: "sportsbite.cc", category: "sports", desc: "", icon: "fa-trophy", url: "https://sportsbite.cc" },
+            { id: 72, title: "sport7.pro", category: "sports", desc: "", icon: "fa-trophy", url: "https://sport7.pro" },
+            { id: 73, title: "sportyhunter.com", category: "sports", desc: "", icon: "fa-trophy", url: "https://sportyhunter.com" },
+            { id: 74, title: "watchsports.to", category: "sports", desc: "", icon: "fa-trophy", url: "https://watchsports.to" },
+            { id: 75, title: "onhockey.tv", category: "sports", desc: "", icon: "fa-trophy", url: "https://onhockey.tv" },
+            { id: 76, title: "crackstreams.io", category: "sports", desc: "", icon: "fa-trophy", url: "https://crackstreams.io" },
+            { id: 77, title: "sportplus.live", category: "sports", desc: "", icon: "fa-trophy", url: "https://sportplus.live" },
+            { id: 78, title: "livetv861.me", category: "sports", desc: "", icon: "fa-trophy", url: "https://livetv861.me" },
+            { id: 79, title: "strikeout.im", category: "sports", desc: "", icon: "fa-trophy", url: "https://strikeout.im" },
+
+            // Live TV
+            { id: 80, title: "tvpass.org", category: "livetv", desc: "", icon: "fa-tv", url: "https://tvpass.org" },
+            { id: 81, title: "globetv.app", category: "livetv", desc: "", icon: "fa-tv", url: "https://globetv.app" },
+            { id: 82, title: "daddylive.mp", category: "livetv", desc: "", icon: "fa-tv", url: "https://daddylive.mp" },
+            { id: 83, title: "tv247.us", category: "livetv", desc: "", icon: "fa-tv", url: "https://tv247.us" },
+            { id: 84, title: "tv.garden", category: "livetv", desc: "", icon: "fa-tv", url: "https://tv.garden" },
+            { id: 85, title: "iptv-web.app", category: "livetv", desc: "", icon: "fa-tv", url: "https://iptv-web.app" },
+            { id: 86, title: "publiciptv.com", category: "livetv", desc: "", icon: "fa-tv", url: "https://publiciptv.com" },
+
+            // Torrents
+            { id: 87, title: "1337x.to", category: "torrents", desc: "", icon: "fa-seedling", url: "https://1337x.to" },
+            { id: 88, title: "thepiratebay.org", category: "torrents", desc: "", icon: "fa-seedling", url: "https://thepiratebay.org" },
+            { id: 89, title: "rutracker.org", category: "torrents", desc: "", icon: "fa-seedling", url: "https://rutracker.org" },
+            { id: 90, title: "rargb.to", category: "torrents", desc: "", icon: "fa-seedling", url: "https://rargb.to" },
+            { id: 91, title: "limetorrents.lol", category: "torrents", desc: "", icon: "fa-seedling", url: "https://limetorrents.lol" },
+            { id: 92, title: "yts.mx", category: "torrents", desc: "Movies", icon: "fa-seedling", url: "https://yts.mx" },
+            { id: 93, title: "eztvx.to", category: "torrents", desc: "TV Shows", icon: "fa-seedling", url: "https://eztvx.to" },
+            { id: 94, title: "torrentgalaxy.one", category: "torrents", desc: "", icon: "fa-seedling", url: "https://torrentgalaxy.one" },
+            { id: 95, title: "extratorrent.st", category: "torrents", desc: "", icon: "fa-seedling", url: "https://extratorrent.st" },
+            { id: 96, title: "ext.to", category: "torrents", desc: "", icon: "fa-seedling", url: "https://ext.to" },
+
+            // Games
+            { id: 97, title: "fitgirl-repacks.site", category: "games", desc: "", icon: "fa-gamepad", url: "https://fitgirl-repacks.site" },
+            { id: 98, title: "dodi-repacks.site", category: "games", desc: "", icon: "fa-gamepad", url: "https://dodi-repacks.site" },
+            { id: 99, title: "ankergames.net", category: "games", desc: "", icon: "fa-gamepad", url: "https://ankergames.net" },
+            { id: 100, title: "g4u.to", category: "games", desc: "", icon: "fa-gamepad", url: "https://g4u.to" },
+            { id: 101, title: "steamrip.com", category: "games", desc: "", icon: "fa-gamepad", url: "https://steamrip.com" },
+            { id: 102, title: "steamgg.net", category: "games", desc: "", icon: "fa-gamepad", url: "https://steamgg.net" },
+            { id: 103, title: "m4ckd0ge-repacks.site", category: "games", desc: "", icon: "fa-gamepad", url: "https://m4ckd0ge-repacks.site" },
+            { id: 104, title: "gload.to", category: "games", desc: "", icon: "fa-gamepad", url: "https://gload.to" },
+
+            // Music
+            { id: 105, title: "spotdownloader.com", category: "music", desc: "", icon: "fa-music", url: "https://spotdownloader.com" },
+            { id: 106, title: "spotifymate.com", category: "music", desc: "", icon: "fa-music", url: "https://spotifymate.com" },
+            { id: 107, title: "spotmate.online", category: "music", desc: "", icon: "fa-music", url: "https://spotmate.online" },
+            { id: 108, title: "y2mate.lol", category: "music", desc: "", icon: "fa-music", url: "https://y2mate.lol" },
+            { id: 109, title: "azmp3.cc", category: "music", desc: "", icon: "fa-music", url: "https://azmp3.cc" },
+            { id: 110, title: "ytmp3.cc", category: "music", desc: "", icon: "fa-music", url: "https://ytmp3.cc" },
+            { id: 111, title: "racoon", category: "music", desc: "", icon: "fa-music", url: "https://racoon.to" },
+            { id: 112, title: "ytiz.xyz", category: "music", desc: "", icon: "fa-music", url: "https://ytiz.xyz" },
+            { id: 113, title: "lucida.to", category: "music", desc: "", icon: "fa-music", url: "https://lucida.to" },
+            { id: 114, title: "cobalt.tools", category: "music", desc: "", icon: "fa-music", url: "https://cobalt.tools" },
+            { id: 115, title: "slsknet.org", category: "music", desc: "", icon: "fa-music", url: "https://slsknet.org" },
+            { id: 116, title: "spotube.dev", category: "music", desc: "", icon: "fa-music", url: "https://spotube.dev" },
+            { id: 117, title: "github.io/downline", category: "music", desc: "", icon: "fa-music", url: "https://github.io/downline" },
+
+            // eBooks
+            { id: 118, title: "z-lib.gd", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://z-lib.gd" },
+            { id: 119, title: "annas-archive.org", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://annas-archive.org" },
+            { id: 120, title: "libgen.rs", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://libgen.rs" },
+            { id: 121, title: "ebook-hunter.org", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://ebook-hunter.org" },
+            { id: 122, title: "galaxyaudiobook.com", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://galaxyaudiobook.com" },
+            { id: 123, title: "audiobookbay.lu", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://audiobookbay.lu" },
+            { id: 124, title: "nepu.to", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://nepu.to" },
+            { id: 125, title: "foxit.com", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://foxit.com" },
+            { id: 126, title: "flowoss.com", category: "ebooks", desc: "", icon: "fa-book-open", url: "https://flowoss.com" },
+
+            // Comics
+            { id: 127, title: "readcomiconline.li", category: "comics", desc: "", icon: "fa-mask", url: "https://readcomiconline.li" },
+            { id: 128, title: "xoxocomic.com", category: "comics", desc: "", icon: "fa-mask", url: "https://xoxocomic.com" },
+            { id: 129, title: "readcomicsonline.ru", category: "comics", desc: "", icon: "fa-mask", url: "https://readcomicsonline.ru" },
+            { id: 130, title: "batcave.biz", category: "comics", desc: "", icon: "fa-mask", url: "https://batcave.biz" },
+            { id: 131, title: "getcomics.org", category: "comics", desc: "", icon: "fa-mask", url: "https://getcomics.org" },
+
+            // Adblockers
+            { id: 132, title: "uBlock Origin", category: "adblockers", desc: "", icon: "fa-shield-halved", url: "https://ublockorigin.com/" },
+            { id: 133, title: "AdBlock Plus", category: "adblockers", desc: "", icon: "fa-shield-halved", url: "https://adblockplus.org/" },
+            { id: 134, title: "AdGuard", category: "adblockers", desc: "", icon: "fa-shield-halved", url: "https://adguard.com/" },
+            { id: 135, title: "AdBlock", category: "adblockers", desc: "", icon: "fa-shield-halved", url: "https://getadblock.com/" },
+            { id: 136, title: "Poper Blocker", category: "adblockers", desc: "", icon: "fa-shield-halved", url: "https://poperblocker.com/" },
+
+            // VPN
+            { id: 137, title: "NordVPN", category: "vpn", desc: "Most Popular", icon: "fa-shield-halved", url: "https://nordvpn.com/" },
+            { id: 138, title: "Surfshark VPN", category: "vpn", desc: "", icon: "fa-shield-halved", url: "https://surfshark.com/" },
+            { id: 139, title: "ExpressVPN", category: "vpn", desc: "", icon: "fa-shield-halved", url: "https://expressvpn.com/" },
+            { id: 140, title: "CyberGhost VPN", category: "vpn", desc: "", icon: "fa-shield-halved", url: "https://cyberghostvpn.com/" },
+            { id: 141, title: "Private Internet Access VPN", category: "vpn", desc: "", icon: "fa-shield-halved", url: "https://privateinternetaccess.com/" },
+            { id: 142, title: "VeePN", category: "vpn", desc: "", icon: "fa-shield-halved", url: "https://veepn.com/" },
+
+            // K-Drama
+            { id: 143, title: "KissAsian", category: "kdrama", desc: "", icon: "fa-tv", url: "https://kissasian.com.vc/" },
+            { id: 144, title: "KissKH.co", category: "kdrama", desc: "", icon: "fa-tv", url: "https://kisskh.co/" },
+
+        ];
+
+        links.push(...additionalLinks);
+
+        // Categories Configuration
+        const categories = [
+            { id: 'all', label: 'All Access', icon: 'fa-globe' },
+            { id: 'movies', label: 'Movies & TV', icon: 'fa-clapperboard' },
+            { id: 'kdrama', label: 'K-Drama', icon: 'fa-tv' },
+            { id: 'anime', label: 'Anime', icon: 'fa-mask' },
+            { id: 'manga', label: 'Manga', icon: 'fa-book' },
+            { id: 'sports', label: 'Live Sports', icon: 'fa-trophy' },
+            { id: 'livetv', label: 'Live TV', icon: 'fa-tv' },
+            { id: 'torrents', label: 'Torrents', icon: 'fa-seedling' },
+            { id: 'games', label: 'Games', icon: 'fa-gamepad' },
+            { id: 'music', label: 'Music', icon: 'fa-music' },
+            { id: 'ebooks', label: 'eBooks', icon: 'fa-book-open' },
+            { id: 'comics', label: 'Comics', icon: 'fa-mask' },
+            { id: 'vpn', label: 'VPN', icon: 'fa-shield-halved' },
+            { id: 'adblockers', label: 'AdBlockers', icon: 'fa-shield-halved' }
+        ];
+
+        // DOM Elements
+        const grid = document.getElementById('contentGrid');
+        const nav = document.getElementById('categoryNav');
+        const searchInput = document.getElementById('searchInput');
+        const emptyState = document.getElementById('emptyState');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // State
+        let activeCategory = 'all';
+        let searchQuery = '';
+        let likes = JSON.parse(localStorage.getItem('likes')) || {};
+        let userLikes = JSON.parse(localStorage.getItem('userLikes')) || {};
+
+        // Initialize
+        function init() {
+            initTheme();
+            renderNav();
+            renderGrid();
+        }
+
+        // Theme Logic
+        function initTheme() {
+            const themeLabel = document.getElementById('themeLabel');
+            if (localStorage.theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                themeLabel.textContent = 'Dark Mode';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeLabel.textContent = 'Light Mode';
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const themeLabel = document.getElementById('themeLabel');
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                themeLabel.textContent = 'Light Mode';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                themeLabel.textContent = 'Dark Mode';
+            }
+        });
+
+        // Render Navigation Buttons
+        function renderNav() {
+            nav.innerHTML = categories.map(cat => `
+                <button 
+                    onclick="setCategory('${cat.id}')"
+                    class="tab-btn ${activeCategory === cat.id ? 'active' : ''} 
+                           px-5 py-2 rounded-full border border-gray-200 dark:border-cyber-gray bg-white dark:bg-cyber-dark 
+                           text-gray-600 dark:text-gray-300
+                           hover:border-cyber-primary hover:text-cyber-primary 
+                           transition-all duration-300 flex items-center gap-2 text-sm font-tech tracking-wide shadow-sm dark:shadow-none"
+                >
+                    <i class="fas ${cat.icon}"></i> ${cat.label}
+                </button>
+            `).join('');
+        }
+
+        // Render Grid Cards
+        function renderGrid() {
+            grid.innerHTML = '';
+
+            // Filter Data
+            const filtered = links.filter(link => {
+                const matchesCategory = activeCategory === 'all' || link.category === activeCategory;
+                const matchesSearch = link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    link.desc.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            }).sort((a, b) => {
+                const likesA = likes[a.id] || 0;
+                const likesB = likes[b.id] || 0;
+                if (likesB !== likesA) return likesB - likesA; // Sort by likes descending
+                return a.title.localeCompare(b.title); // Then by title ascending
+            });
+
+            // Handle Empty State
+            if (filtered.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+            }
+
+            // Create Cards
+            filtered.forEach(link => {
+                const card = document.createElement('div');
+                card.className = 'tech-card bg-white dark:bg-cyber-dark border border-gray-200 dark:border-cyber-gray p-6 rounded-xl flex flex-col group shadow-sm dark:shadow-none relative';
+
+                // Card Color logic based on category (optional, adds variety)
+                let accentColor = 'text-cyber-primary';
+                if (link.category === 'anime') accentColor = 'text-pink-500';
+                if (link.category === 'sports') accentColor = 'text-green-500';
+                if (link.category === 'movies') accentColor = 'text-yellow-500';
+
+                const likeCount = likes[link.id] || 0;
+                const isLiked = userLikes[link.id]; // Check if THIS user liked it
+
+                card.innerHTML = `
+                    <a href="${link.url}" target="_blank" class="absolute inset-0 z-0"></a>
+                    <div class="flex items-start justify-between mb-4 relative z-10 pointer-events-none">
+                        <div class="w-12 h-12 rounded-lg bg-gray-50 dark:bg-white/5 flex items-center justify-center text-xl ${accentColor} group-hover:scale-110 transition-transform">
+                            <i class="fas ${link.icon}"></i>
+                        </div>
+                        <button onclick="toggleLike(event, ${link.id})" class="pointer-events-auto flex items-center gap-1 text-sm font-bold transition-colors ${isLiked ? 'text-red-500' : 'text-gray-400 dark:text-gray-600 hover:text-red-500'}">
+                            <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                            <span>${likeCount}</span>
+                        </button>
+                    </div>
+                    
+                    <div class="relative z-10 pointer-events-none">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white font-tech mb-1 group-hover:text-cyber-primary transition-colors">${link.title}</h3>
+                        <p class="text-gray-500 text-sm mb-4 leading-relaxed">${link.desc}</p>
+                    </div>
+                    
+                    <div class="mt-auto flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-cyber-primary dark:group-hover:text-white transition-colors relative z-10 pointer-events-none">
+                        <span>Access</span>
+                        <i class="fas fa-chevron-right text-cyber-primary text-[10px]"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Actions
+        window.setCategory = (id) => {
+            activeCategory = id;
+            renderNav();
+            renderGrid();
+        };
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderGrid();
+        });
+
+        window.toggleLike = (e, id) => {
+            e.preventDefault(); // Prevent link click
+            e.stopPropagation(); // Stop bubbling
+
+            if (!likes[id]) likes[id] = 0;
+
+            const btn = e.currentTarget;
+            const icon = btn.querySelector('i');
+            const countSpan = btn.querySelector('span');
+
+            if (userLikes[id]) {
+                // Unlike
+                likes[id]--;
+                if (likes[id] < 0) likes[id] = 0;
+                delete userLikes[id];
+
+                // Update UI directly
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-gray-400', 'dark:text-gray-600');
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+            } else {
+                // Like
+                likes[id]++;
+                userLikes[id] = true;
+
+                // Update UI directly
+                btn.classList.remove('text-gray-400', 'dark:text-gray-600');
+                btn.classList.add('text-red-500');
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+            }
+
+            countSpan.textContent = likes[id];
+
+            localStorage.setItem('likes', JSON.stringify(likes));
+            localStorage.setItem('userLikes', JSON.stringify(userLikes));
+            // renderGrid(); // Disabled to prevent re-sorting on like
+        };
+
+        // Start
+        init();
+
+    </script>
+</body>
+
+</html>
